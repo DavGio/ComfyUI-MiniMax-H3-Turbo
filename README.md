@@ -13,14 +13,33 @@ image-to-video):
 | **MiniMax-H3 Turbo LoRA** | `MODEL → MODEL`, applies the turbo LoRA |
 | **MiniMax-H3 Turbo Sampler** | `→ SAMPLER`, feeds `SamplerCustomAdvanced` |
 
-## Current best — `v4` at step 600
+## Which checkpoint — `v4` (600) or `v1` (850)?
 
-Use **`minimax_h3_turbo_v4_step600_ema.safetensors`** (from the
+For **most** work, use **`minimax_h3_turbo_v4_step600_ema.safetensors`** (from the
 [LoRA repo](https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora)). It's the
 strongest checkpoint so far: much better static / small-motion shots, markedly
 better micro-detail (faces, fingers, texture), and the over-sharpening / plastic
-look of the earlier `v1` (~850) line is fully resolved. Still a preview — the two
-areas still being improved are **audio** and **fast, intense motion**.
+look of the earlier `v1` (~850) line is fully resolved.
+
+v4 introduced a **static-frame enhancement**. The one trade-off shows up **only at
+4 steps with large, fast motion**, where v4 can produce **motion-smear / trailing
+ghosting** (actively being fixed). **Using 6–8 steps largely removes it** — and v4
+tolerates higher step counts better than v1 (which over-sharpens at high steps +
+strength 1.0). For the narrow case of **4 steps *and* heavy motion**, the older
+**`v1` ~850** checkpoint can still be friendlier.
+
+```
+Using 6–8 steps?        ── yes ──►  v4-600  (recommended)
+   │ no (4 steps)
+   ▼
+Heavy / fast motion?    ── no  ──►  v4-600  (recommended)
+   │ yes
+   ▼
+                                    v1-850  (friendlier at 4-step heavy motion)
+```
+
+Still a preview — the two areas still being improved are **audio** and **fast,
+intense motion**.
 
 ## Install
 
